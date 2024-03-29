@@ -1,2 +1,5 @@
 streamlit
 pymongo[srv]
+pandas
+matplotlib
+numpy

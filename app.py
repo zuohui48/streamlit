@@ -14,7 +14,7 @@ def main():
     # @st.experimental_memo(ttl=60)
     def get_data():
         db = client.indeed #establish connection to the 'sample_guide' db
-        items = db.planets.find() 
+        items = db.indeed.find() 
         items = list(items)        
         return items
     

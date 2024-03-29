@@ -12,13 +12,13 @@ def main():
     client = init_connection()
     
     # @st.experimental_memo(ttl=60)
-    def get_data():
+    def get_companyStats_data():
         db = client.indeed #establish connection to the 'sample_guide' db
-        items = db.indeed.find() 
+        items = db.companyStats.find() 
         items = list(items)        
         return items
     
-    data = get_data()
+    data = get_companyStats_data()
 
     for item in data:
         st.write(item)

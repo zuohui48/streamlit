@@ -37,4 +37,13 @@ if text_search:
   if len(job_df) == 0:
     st.write("Job not found")
   else:
-    st.write(job_df)
+    for row in range(len(job_df)):
+      company_name = job_df.iloc[row]["companyName"] 
+      job_title = job_df.iloc[row]["jobTitle"] 
+      jd = job_df.iloc[row]["jobDescription"] 
+      apply_url = job_df.iloc[row]["applyNowUrl"] 
+      with st.expander(f"{job_title} @ {company_name}"):
+        st.write(company_name)
+        st.write(job_title)
+        st.write(jd)
+        st.write(f"Apply at : {apply_url}")

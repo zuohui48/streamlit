@@ -1,9 +1,4 @@
 import streamlit as st
-from pymongo import MongoClient
-import pandas as pd
-import certifi
-import matplotlib.pyplot as plt
-import numpy as np
 
 st.title("WOW WELCOME TO DATA JOBS TIME TO FIND MASSIVE MEGA GOOT STRADEJ")
 with st.expander('About this app'):

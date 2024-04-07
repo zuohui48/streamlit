@@ -29,8 +29,8 @@ def get_companyStats_data():
 
 data = get_companyStats_data()
 
+data['companyName'] = data['companyName'].fillna(data['companyShorthand']) # if companyname na, use companyshorthand
 company_df = data[data["companyName"].str.contains(text_search, case=False)]
-
 
 if text_search:
   if len(company_df) == 0:
@@ -42,8 +42,8 @@ if text_search:
         company_review_url = (company_df.iloc[i]["companyReviewUrl"])
         company_url = (company_df.iloc[i]["companyUrl"])
 
-        st.write(f"Find out more about {company_name} at  {company_url}")
-        st.write(f"Read reviews about {company_name} at  {company_review_url}")
+        st.write(f"Find out more about {company_name} [here]({company_url})")
+        st.write(f"Read reviews about {company_name} [here]({company_review_url})")
         st.write("\n")
         rating_test = company_df.iloc[i]["companyOverallRating"]
         if np.isnan(rating_test):

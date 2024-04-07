@@ -49,4 +49,4 @@ if text_search:
         st.write(company_name)
         st.write(job_title)
         st.write(jd)
-        st.write(f"Apply at : {apply_url}")
+        st.write(f"Apply [here]({apply_url})")

@@ -29,8 +29,40 @@ def get_companyStats_data():
 
 data = get_companyStats_data()
 
+def display_rating(rating):
+  full_star = '★'
+  half_star = '½'
+  empty_star = '☆'
+  full_stars = int(rating)
+  remainder = rating - full_stars
+  if remainder >= 0.75:
+    return full_star * full_stars + '★' + empty_star * (5 - full_stars - 1)
+  elif remainder >= 0.25:
+     return full_star * full_stars + half_star + empty_star * (5 - full_stars - 1)
+  else:
+     return full_star * full_stars + empty_star * (5 - full_stars)
+
+average_overall_rating = data["companyOverallRating"].mean()
+min_overall_rating = data["companyOverallRating"].min()
+max_overall_rating = data["companyOverallRating"].max()
+
+st.write(f"Average overall ratings : {display_rating(average_overall_rating)} {round(average_overall_rating,2)}")
+st.write(f"Minimum overall ratings : {display_rating(min_overall_rating)} {round(min_overall_rating,2)}")
+st.write(f"Maximum overall ratings : {display_rating(max_overall_rating)} {round(max_overall_rating,2)}")
+
+# Plot histogram
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.hist(data["companyOverallRating"], bins=20, color='skyblue', edgecolor='black')
+ax.set_title('Distribution of Overall Ratings Across Companies')
+ax.set_xlabel('Overall Rating')
+ax.set_ylabel('Frequency')
+ax.grid(True)
+
+# Display the plot in Streamlit
+st.pyplot(fig)
 data['companyName'] = data['companyName'].fillna(data['companyShorthand']) # if companyname na, use companyshorthand
 company_df = data[data["companyName"].str.contains(text_search, case=False)]
+
 
 if text_search:
   if len(company_df) == 0:
@@ -61,18 +93,6 @@ if text_search:
           rating_types = [overall, culture, jobsecurity, management, salary_benefits, wlb]
           rating_strings = ["Overall Rating", "Culture Rating", "Job Security Rating", "Management Rating", "Salary Benefits Rating", "Work Life Balance Rating"]
 
-          def display_rating(rating):
-              full_star = '★'
-              half_star = '½'
-              empty_star = '☆'
-              full_stars = int(rating)
-              remainder = rating - full_stars
-              if remainder >= 0.75:
-                  return full_star * full_stars + '★' + empty_star * (5 - full_stars - 1)
-              elif remainder >= 0.25:
-                  return full_star * full_stars + half_star + empty_star * (5 - full_stars - 1)
-              else:
-                  return full_star * full_stars + empty_star * (5 - full_stars)
             
           # Determine the maximum length of the rating strings
           max_length = max(len(s) for s in rating_strings)

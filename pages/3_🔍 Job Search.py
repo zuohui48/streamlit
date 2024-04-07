@@ -27,26 +27,61 @@ def get_companyStats_data():
   items = db.jobDescriptions.find() 
   return pd.DataFrame(list(items))
 
+def get_summarised_descriptions():
+  db = client.indeed
+  items = db.summarisedDescriptions.find()
+  return pd.DataFrame(list(items))
+
+def get_top_similiar_jobs():
+  db = client.indeed
+  items = db.topSimilarJobs.find()
+  return pd.DataFrame(list(items))
+
+
+
 data = get_companyStats_data()
+summarised_descriptions = get_summarised_descriptions()
+top_similar_jobs = get_top_similiar_jobs()
 
 
 job_df = data[data["jobTitle"].str.contains(text_search, case=False)]
+job_df["str_id"] = job_df['_id'].astype(str)
 
+st.write(job_df[job_df["str_id"] == "661132238353e08e784a222d"])
 
 if text_search:
   if len(job_df) == 0:
     st.write("Job not found")
   else:
-    job_df.sort_values(by = "dateCreated", inplace = True)
+    job_df["str_id"] = job_df['_id'].astype(str)
     for row in range(len(job_df)):
       date_posted = str(job_df.iloc[row]["dateCreated"]).split(" ")[0]
       company_name = job_df.iloc[row]["companyName"] 
       job_title = job_df.iloc[row]["jobTitle"] 
       jd = job_df.iloc[row]["jobDescription"] 
-      apply_url = job_df.iloc[row]["applyNowUrl"] 
+      apply_url = job_df.iloc[row]["applyNowUrl"]
+      job_id = job_df.iloc[row]["str_id"]
+      summarised_description = summarised_descriptions[summarised_descriptions["_id"] == job_id].iloc[0]["summarisedJobDescription"]
+      similar_jobs = top_similar_jobs[top_similar_jobs["jobID"] == job_id].iloc[0]["nearest_jobs"]
+
+
       with st.expander(f"{job_title} @ {company_name}"):
         st.write(f"Date posted : {date_posted}")
         st.write(company_name)
         st.write(job_title)
         st.write(jd)
         st.write(f"Apply [here]({apply_url})")
+        st.write("\n")
+        st.write("HERE BELOW IS USING LLM FOR SUMMARISED DESCRIPTIONS")
+        st.write(summarised_description)
+        st.write("\n")
+        st.write("HERE BELOW IS THE TOP SIMILAR JOBS")
+        st.write(similar_jobs)
+
+        for similar_job_id in similar_jobs:
+          st.write(f"Job ID : {similar_job_id}")
+          similar_job = job_df[job_df["str_id"]== similar_job_id]
+          similar_job_title = similar_job.iloc[0]["jobTitle"]
+          similar_job_company = similar_job.iloc[0]["companyName"]
+          st.write(f"Job Title : {similar_job_title} @ {similar_job_company}")
+

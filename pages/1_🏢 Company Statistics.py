@@ -43,8 +43,11 @@ def display_rating(rating):
      return full_star * full_stars + empty_star * (5 - full_stars)
 
 average_overall_rating = data["companyOverallRating"].mean()
+
 min_overall_rating = data["companyOverallRating"].min()
+
 max_overall_rating = data["companyOverallRating"].max()
+
 
 st.write(f"Average overall ratings : {display_rating(average_overall_rating)} {round(average_overall_rating,2)}")
 st.write(f"Minimum overall ratings : {display_rating(min_overall_rating)} {round(min_overall_rating,2)}")

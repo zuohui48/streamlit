@@ -41,13 +41,12 @@ def get_top_similiar_jobs():
 
 data = get_companyStats_data()
 summarised_descriptions = get_summarised_descriptions()
+st.write(summarised_descriptions.loc[summarised_descriptions["_id"] == "6611fba88353e08e784a22ca"])
 top_similar_jobs = get_top_similiar_jobs()
 
+data["str_id"] = data['_id'].astype(str)
 
 job_df = data[data["jobTitle"].str.contains(text_search, case=False)]
-job_df["str_id"] = job_df['_id'].astype(str)
-
-st.write(job_df[job_df["str_id"] == "661132238353e08e784a222d"])
 
 if text_search:
   if len(job_df) == 0:
@@ -55,6 +54,7 @@ if text_search:
   else:
     job_df["str_id"] = job_df['_id'].astype(str)
     for row in range(len(job_df)):
+      st.write(job_df.iloc[row])
       date_posted = str(job_df.iloc[row]["dateCreated"]).split(" ")[0]
       company_name = job_df.iloc[row]["companyName"] 
       job_title = job_df.iloc[row]["jobTitle"] 
@@ -63,7 +63,6 @@ if text_search:
       job_id = job_df.iloc[row]["str_id"]
       summarised_description = summarised_descriptions[summarised_descriptions["_id"] == job_id].iloc[0]["summarisedJobDescription"]
       similar_jobs = top_similar_jobs[top_similar_jobs["jobID"] == job_id].iloc[0]["nearest_jobs"]
-
 
       with st.expander(f"{job_title} @ {company_name}"):
         st.write(f"Date posted : {date_posted}")
@@ -80,7 +79,7 @@ if text_search:
 
         for similar_job_id in similar_jobs:
           st.write(f"Job ID : {similar_job_id}")
-          similar_job = job_df[job_df["str_id"]== similar_job_id]
+          similar_job = data.loc[data["str_id"]== similar_job_id]
           similar_job_title = similar_job.iloc[0]["jobTitle"]
           similar_job_company = similar_job.iloc[0]["companyName"]
           st.write(f"Job Title : {similar_job_title} @ {similar_job_company}")

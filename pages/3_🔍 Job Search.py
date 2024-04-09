@@ -41,7 +41,6 @@ def get_top_similiar_jobs():
 
 data = get_companyStats_data()
 summarised_descriptions = get_summarised_descriptions()
-st.write(summarised_descriptions.loc[summarised_descriptions["_id"] == "6611fba88353e08e784a22ca"])
 top_similar_jobs = get_top_similiar_jobs()
 
 data["str_id"] = data['_id'].astype(str)

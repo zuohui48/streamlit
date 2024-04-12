@@ -118,7 +118,7 @@ if text_search:
 
             # Add data labels on top of bars
             for bar, value in zip(bars, values):
-                ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 10, str(value), ha='center', color='black')
+                ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height(), str(value), ha='center', color='black')
 
             # Add gridlines
             ax.grid(axis='y', linestyle='--', alpha=0.7)

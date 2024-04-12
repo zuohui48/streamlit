@@ -18,7 +18,6 @@ show_pages(
         Page("pages/Salary Benefits Statistics.py"),
         Page("pages/Work Life Balance Statistics.py"),
         Page("pages/Company Search.py"),
-        Section("Job Industry Statistics", icon="💼"),
         
         # Pages after a section will be indented
         Section("Job Industry", icon="💼"),

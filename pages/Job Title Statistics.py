@@ -4,7 +4,11 @@ import pandas as pd
 import certifi
 import matplotlib.pyplot as plt
 import numpy as np
+from st_pages import Page, Section, show_pages, add_page_title
 
+# Either this or add_indentation() MUST be called on each page in your
+# app to add indendation in the sidebar
+add_page_title()
 
 st.title("Trending data jobs in the industry")
 
@@ -49,7 +53,26 @@ for label, size in zip(labels, sizes):
         filtered_sizes.append(size)
 
 # Plotting the pie chart
-fig, ax = plt.subplots()
-ax.pie(filtered_sizes, labels=filtered_labels, autopct='%1.1f%%', startangle=140, colors=plt.cm.Paired.colors)
-ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+fig, ax = plt.subplots(figsize=(8, 6))  # Set a larger figure size for better visualization
+
+# Define colors
+colors = plt.cm.Paired.colors
+
+# Explode slices (optional)
+explode = (0.1, 0, 0, 0, 0)  # Explode the first slice by 0.1
+
+# Plot the pie chart with enhanced aesthetics
+wedges, texts, autotexts = ax.pie(filtered_sizes, labels=filtered_labels, autopct='%1.1f%%', startangle=140,
+                                   colors=colors, textprops=dict(color="white"))
+
+# Equal aspect ratio ensures that pie is drawn as a circle
+ax.axis('equal')
+
+# Add a legend
+ax.legend(wedges, filtered_labels, loc="best")
+
+# Set title
+ax.set_title('Distribution of Job Titles', pad=20)
+
+# Display the plot in Streamlit
 st.pyplot(fig)

@@ -1,4 +1,33 @@
 import streamlit as st
+from st_pages import Page, Section, show_pages, add_page_title
+
+# Either this or add_indentation() MUST be called on each page in your
+# app to add indendation in the sidebar
+add_page_title()
+
+# Specify what pages should be shown in the sidebar, and what their titles and icons
+# should be
+show_pages(
+    [
+        Page("app.py", "Home", "🏠"),
+        Section("Company", icon = "🏢"),
+        Page("pages/Overall Rating Statistics.py"),
+        Page("pages/Culture Rating Statistics.py"),
+        Page("pages/Management Rating Statistics.py"),
+        Page("pages/Security & Advancement Statistics.py"),
+        Page("pages/Salary Benefits Statistics.py"),
+        Page("pages/Work Life Balance Statistics.py"),
+        Page("pages/Company Search.py"),
+        Section("Job Industry Statistics", icon="💼"),
+        
+        # Pages after a section will be indented
+        Section("Job Industry", icon="💼"),
+        Page("pages/Job Title Statistics.py"),
+        Page("pages/Tech Stack Statistics.py"),
+        # Unless you explicitly say in_section=False
+        Page("pages/Job Search.py", icon = "🔍", in_section = False)
+    ]
+)
 
 st.title("WOW WELCOME TO DATA JOBS TIME TO FIND MASSIVE MEGA GOOT STRADEJ")
 st.header('About this app')

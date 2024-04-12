@@ -4,6 +4,11 @@ import pandas as pd
 import certifi
 import matplotlib.pyplot as plt
 import numpy as np
+from st_pages import Page, Section, show_pages, add_page_title
+
+# Either this or add_indentation() MUST be called on each page in your
+# app to add indendation in the sidebar
+add_page_title()
 
 ca = certifi.where()
 
@@ -29,6 +34,10 @@ def get_companyStats_data():
 
 data = get_companyStats_data()
 
+
+data['companyName'] = data['companyName'].fillna(data['companyShorthand']) # if companyname na, use companyshorthand
+company_df = data[data["companyName"].str.contains(text_search, case=False)]
+
 def display_rating(rating):
   full_star = '★'
   half_star = '½'
@@ -41,31 +50,7 @@ def display_rating(rating):
      return full_star * full_stars + half_star + empty_star * (5 - full_stars - 1)
   else:
      return full_star * full_stars + empty_star * (5 - full_stars)
-
-average_overall_rating = data["companyOverallRating"].mean()
-
-min_overall_rating = data["companyOverallRating"].min()
-
-max_overall_rating = data["companyOverallRating"].max()
-
-
-st.write(f"Average overall ratings : {display_rating(average_overall_rating)} {round(average_overall_rating,2)}")
-st.write(f"Minimum overall ratings : {display_rating(min_overall_rating)} {round(min_overall_rating,2)}")
-st.write(f"Maximum overall ratings : {display_rating(max_overall_rating)} {round(max_overall_rating,2)}")
-
-# Plot histogram
-fig, ax = plt.subplots(figsize=(10, 6))
-ax.hist(data["companyOverallRating"], bins=20, color='skyblue', edgecolor='black')
-ax.set_title('Distribution of Overall Ratings Across Companies')
-ax.set_xlabel('Overall Rating')
-ax.set_ylabel('Frequency')
-ax.grid(True)
-
-# Display the plot in Streamlit
-st.pyplot(fig)
-data['companyName'] = data['companyName'].fillna(data['companyShorthand']) # if companyname na, use companyshorthand
-company_df = data[data["companyName"].str.contains(text_search, case=False)]
-
+  
 
 if text_search:
   if len(company_df) == 0:
@@ -107,27 +92,69 @@ if text_search:
                 st.write("Ratings by Category")
               # Align the rating strings using string formatting
               formatted_rating_string = f"{rating_strings[j]:<{max_length + 5}}"
-              st.write(f"{formatted_rating_string} : {display_rating(rating_types[j])} {rating_types[j]}")
+              if not np.isnan(rating_types[j]):
+                st.write(f"{formatted_rating_string} : {display_rating(rating_types[j])} {rating_types[j]}")
 
       
           star_test = company_df.iloc[i]["companyTotal1Star"]
           if not np.isnan(star_test):
             st.write("\n")
 
+            # Define categories and values
             categories = ['1 star', '2 star', '3 star', '4 star', '5 star']
-            values = [int(company_df.iloc[i]["companyTotal1Star"]), int(company_df.iloc[i]["companyTotal2Star"]), int(company_df.iloc[i]["companyTotal3Star"]), int(company_df.iloc[i]["companyTotal4Star"]), int(company_df.iloc[i]["companyTotal5Star"])]
+            values = [
+                int(company_df.iloc[i]["companyTotal1Star"]),
+                int(company_df.iloc[i]["companyTotal2Star"]),
+                int(company_df.iloc[i]["companyTotal3Star"]),
+                int(company_df.iloc[i]["companyTotal4Star"]),
+                int(company_df.iloc[i]["companyTotal5Star"])
+            ]
             
-            # # Create a bar chart using Matplotlib
-            fig, ax = plt.subplots()
-            bars = ax.bar(categories, values)
+            # Create a bar chart using Matplotlib
+            fig, ax = plt.subplots(figsize=(8, 6))
 
+            # Plot bars with adjusted width and color
+            bars = ax.bar(categories, values, color='skyblue', width=0.6)
 
-            ax.bar(categories, values)
+            # Add data labels on top of bars
+            for bar, value in zip(bars, values):
+                ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 10, str(value), ha='center', color='black')
+
+            # Add gridlines
+            ax.grid(axis='y', linestyle='--', alpha=0.7)
+
+            # Set labels and title
             ax.set_xlabel('Reviews')
             ax.set_ylabel('Counts')
-            
-          
             ax.set_title(f'Review Counts for {company_name}')
 
-            # # Display the plot using Streamlit
+            # Display the plot using Streamlit
+            st.pyplot(fig)
+        
+        if not np.isnan(rating_test):
+            st.markdown("""---""")
+            st.write("\n")
+            average_overall_rating = data["companyOverallRating"].mean()
+            difference = overall - average_overall_rating
+            if difference > 0:
+              st.write(f"{company_name} has overall rating higher than average by {round(difference,2)} stars")
+            else:
+              st.write(f"{company_name} has overall rating lower than average by {round(abs(difference),2)} stars")
+              
+          # Plot histogram
+            fig, ax = plt.subplots(figsize=(10, 6))
+            ax.hist(data["companyOverallRating"], bins=20, color='skyblue', edgecolor='black')
+            ax.set_title('Distribution of Overall Ratings Across Companies')
+            ax.set_xlabel('Overall Rating')
+            ax.set_ylabel('Frequency')
+            ax.grid(True)
+
+            # Add vertical lines with labels
+            ax.axvline(x=average_overall_rating, color='black', linestyle='--')  # Vertical line at x=3.5
+            ax.text(average_overall_rating, 40, 'Average Overall Rating', color='black')  # Label for the vertical line at x=3.5
+
+            ax.axvline(x=overall, color='red', linestyle='--')  # Vertical line at x=4.5
+            ax.text(overall, 30, f"{company_name} Overall Rating", color='red')  # Label for the vertical line at x=4.5
+
+            # Display the plot in Streamlit
             st.pyplot(fig)

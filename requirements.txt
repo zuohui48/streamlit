@@ -3,3 +3,4 @@ pymongo[srv]
 pandas
 matplotlib
 numpy
+st_pages

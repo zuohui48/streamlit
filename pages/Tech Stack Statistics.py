@@ -53,6 +53,7 @@ for mainjob in data["mainJob"].unique():
 for mainjob, skills_list in job_skills.items():
   st.write(mainjob)
   top_skills = list(Counter(skills_list).most_common(5))
+  #top_skills.sort(key=lambda x: x[0], reverse=False)
   skills = []
   count = []
   for i in top_skills:
@@ -60,8 +61,9 @@ for mainjob, skills_list in job_skills.items():
     count.append(i[1])
   # Plotting the pie chart
   fig, ax = plt.subplots()
-  ax.pie(count, labels=skills, autopct='%1.1f%%', startangle=140)
-  ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+  #ax.pie(count, labels=skills, autopct='%1.1f%%', startangle=140)
+  plt.bar(skills, count, color="skyblue")
+  #ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
   ax.set_title(f"Most Common Tech Stack for {mainjob}")
 
   # Display the pie chart

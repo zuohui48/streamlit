@@ -11,6 +11,7 @@ show_pages(
     [
         Page("app.py", "Home", "🏠"),
         Section("Company", icon = "🏢"),
+        Page("pages/Company List.py"),
         Page("pages/Overall Rating Statistics.py"),
         Page("pages/Culture Rating Statistics.py"),
         Page("pages/Management Rating Statistics.py"),

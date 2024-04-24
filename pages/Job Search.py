@@ -74,6 +74,8 @@ if text_search:
             jd = job_df.iloc[row]["jobDescription"]
             apply_url = job_df.iloc[row]["applyNowUrl"]
             job_id = job_df.iloc[row]["str_id"]
+            st.write(summarised_descriptions["_id"])
+
             summarised_description = summarised_descriptions[
                 summarised_descriptions["_id"] == job_id
             ].iloc[0]["summarisedJobDescription"]

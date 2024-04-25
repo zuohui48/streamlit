@@ -64,7 +64,7 @@ st.write(f"Maximum Salary Benefits ratings : {display_rating(max_salarybenefits_
 fig, ax = plt.subplots(figsize=(10, 6))
 ax.hist(data["companySalaryBenefitsRating"], bins=20, color='skyblue', edgecolor='black')
 ax.set_title('Distribution of Salary Benefits Ratings Across Companies')
-ax.set_xlabel('Security and Salary Benefits Rating')
+ax.set_xlabel('Salary Benefits Rating')
 ax.set_ylabel('Frequency')
 ax.grid(True)
 

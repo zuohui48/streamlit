@@ -26,7 +26,7 @@ show_pages(
     ]
 )
 
-st.title("Welcome to Jobminer Insider")
+st.title("Welcome to JobMiner Insider")
 st.header('About this app')
 st.markdown('**What can this application do?**')
 st.info('1. This application provides job seekers statistics on data/software related jobs according to recent industry trends. \n'

@@ -49,10 +49,25 @@ def get_top_similiar_jobs():
 
 
 data = get_companyStats_data()
+data["str_id"] = data["_id"].astype(str)
 summarised_descriptions = get_summarised_descriptions()
+summarised_descriptions["str_id"] = summarised_descriptions["_id"].astype(str)
+
+common_rows = pd.merge(data,summarised_descriptions, on=['str_id', 'str_id'], how='inner')
+common_primary_keys = common_rows['str_id']
+data = data[data['str_id'].isin(common_primary_keys)]
+
+
 top_similar_jobs = get_top_similiar_jobs()
 
-data["str_id"] = data["_id"].astype(str)
+top_similar_jobs["jobID"] = top_similar_jobs["jobID"].astype(str)
+
+s = top_similar_jobs["jobID"]
+
+top_similar_jobs = top_similar_jobs[top_similar_jobs['jobID'].isin(common_primary_keys)]
+
+
+
 
 job_df = data[data["jobTitle"].str.contains(text_search, case=False)]
 
@@ -74,11 +89,9 @@ if text_search:
             jd = job_df.iloc[row]["jobDescription"]
             apply_url = job_df.iloc[row]["applyNowUrl"]
             job_id = job_df.iloc[row]["str_id"]
-            st.write(summarised_descriptions["_id"])
+            #st.write(summarised_descriptions["_id"])
 
-            summarised_description = summarised_descriptions[
-                summarised_descriptions["_id"] == job_id
-            ].iloc[0]["summarisedJobDescription"]
+            summarised_description = summarised_descriptions[summarised_descriptions["str_id"] == job_id].iloc[0]["summarisedJobDescription"]
             similar_jobs = top_similar_jobs[top_similar_jobs["jobID"] == job_id].iloc[
                 0
             ]["nearest_jobs"]
@@ -103,10 +116,9 @@ if text_search:
                   similar_job_title = similar_job.iloc[0]["jobTitle"]
                   similar_job_company = similar_job.iloc[0]["companyName"]
                   similar_jd = similar_job.iloc[0]["jobDescription"] 
-                  similar_summarised_description = summarised_descriptions[summarised_descriptions["_id"] == similar_job_id].iloc[0]["summarisedJobDescription"]
+                  similar_summarised_description = summarised_descriptions[summarised_descriptions["str_id"] == similar_job_id].iloc[0]["summarisedJobDescription"]
                   similar_apply_url = job_df.iloc[row]["applyNowUrl"]
                   st.write(f"{count}. {similar_job_title} @ {similar_job_company}")
                   st.write(f"Apply [here]({similar_apply_url})")
                   count += 1
-        st.write(displayed_jobs)
 

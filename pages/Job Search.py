@@ -89,13 +89,11 @@ if text_search:
             jd = job_df.iloc[row]["jobDescription"]
             apply_url = job_df.iloc[row]["applyNowUrl"]
             job_id = job_df.iloc[row]["str_id"]
-            #st.write(summarised_descriptions["_id"])
+            
 
             summarised_description = summarised_descriptions[summarised_descriptions["str_id"] == job_id].iloc[0]["summarisedJobDescription"]
-            similar_jobs = top_similar_jobs[top_similar_jobs["jobID"] == job_id].iloc[
-                0
-            ]["nearest_jobs"]
-
+            similar_jobs = top_similar_jobs[top_similar_jobs["jobID"] == job_id].iloc[0]["nearest_jobs"]
+            #st.write(top_similar_jobs[top_similar_jobs["jobID"] == job_id].iloc[0])
             with st.expander(display_string):
                 st.write(f"Date posted : {date_posted}")
                 st.write(company_name)
